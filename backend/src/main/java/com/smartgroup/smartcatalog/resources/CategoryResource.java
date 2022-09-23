@@ -1,25 +1,28 @@
 package com.smartgroup.smartcatalog.resources;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartgroup.smartcatalog.entities.Category;
+import com.smartgroup.smartcatalog.services.CategoryService;
 
 @RestController
 @RequestMapping(path = "/categories")
 public class CategoryResource {
 
+	@Autowired
+	private CategoryService categoryService;
+	
+	@GetMapping
 	public ResponseEntity<List<Category>> findAll() {
-		List<Category> categories = new ArrayList<>();
+		List<Category> categoriesList = categoryService.findAll();
 		
-		categories.add(new Category(1L, "Books"));
-		categories.add(new Category(2L, "Laptops"));
-		
-		return ResponseEntity.ok().body(categories);
+		return ResponseEntity.ok().body(categoriesList);
 	}
 	
 }
