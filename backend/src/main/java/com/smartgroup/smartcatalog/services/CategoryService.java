@@ -1,6 +1,7 @@
 package com.smartgroup.smartcatalog.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,17 @@ public class CategoryService {
 //			categoriesDTO.add(new CategoryDTO(category));
 //		}
 	}
+
+	public CategoryDTO findById(Long id) {
+		Optional<Category> object = categoryRepository.findById(id);
+		
+		Category category = object.get();
+		
+		CategoryDTO categoryDTO = new CategoryDTO(category);
+		
+		return categoryDTO;
+	}
+	
+	
 	
 }
