@@ -2,7 +2,8 @@ package com.smartgroup.smartcatalog.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.smartgroup.smartcatalog.entities.Category;
@@ -20,7 +21,7 @@ public class ProductDTO implements Serializable {
 	
 	private Instant date;
 	
-	private Set<CategoryDTO> categoriesDTO = new HashSet<>();
+	private List<CategoryDTO> categories = new ArrayList<>();
 
 	public ProductDTO() {}
 
@@ -44,7 +45,7 @@ public class ProductDTO implements Serializable {
 
 	public ProductDTO(Product entity, Set<Category> categories) {
 		this(entity);
-		categories.forEach(cat -> this.categoriesDTO.add(new CategoryDTO(cat)));
+		categories.forEach(cat -> this.categories.add(new CategoryDTO(cat)));
 	}
 
 	public Long getId() {
@@ -95,12 +96,12 @@ public class ProductDTO implements Serializable {
 		this.date = date;
 	}
 
-	public Set<CategoryDTO> getCategoriesDTO() {
-		return categoriesDTO;
+	public List<CategoryDTO> getCategories() {
+		return categories;
 	}
 
-	public void setCategoriesDTO(Set<CategoryDTO> categoriesDTO) {
-		this.categoriesDTO = categoriesDTO;
+	public void setCategories(List<CategoryDTO> categories) {
+		this.categories = categories;
 	}
-	
+
 }
