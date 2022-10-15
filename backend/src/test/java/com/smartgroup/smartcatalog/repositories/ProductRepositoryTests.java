@@ -10,12 +10,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.smartgroup.smartcatalog.entities.Product;
+import com.smartgroup.smartcatalog.tests.factories.ProductFactory;
 
 @SpringBootTest
 public class ProductRepositoryTests {
 
 	Long existingId;
 	Long nonExistingId;
+	Long totalProductsCount;
 	
 	@Autowired
 	private ProductRepository productRepository;
@@ -26,6 +28,8 @@ public class ProductRepositoryTests {
 		existingId = 1L;
 		// 1. Arrange -> deleteShouldThrowEmptyResultDataAccessExceptionWhenNonExistingId
 		nonExistingId = 30L;
+		// 1. Arrange -> saveShouldPersistWithAutoIncrementWhenIdIsNull
+		totalProductsCount = 25L;
 	}
 	
 	@Test
@@ -52,6 +56,22 @@ public class ProductRepositoryTests {
 			// 2. Act
 			productRepository.deleteById(nonExistingId);
 		});
+		
+	}
+	
+	@Test
+	public void saveShouldPersistWithAutoIncrementWhenIdIsNull() {
+		
+		// 1. Arrange
+		Product product = ProductFactory.createProduct();
+		product.setId(null);
+		
+		// 2. Act
+		product = productRepository.save(product);
+		
+		// 3. Assert
+		Assertions.assertNotNull(product.getId());
+		Assertions.assertEquals(totalProductsCount + 1L, product.getId());
 		
 	}
 	
