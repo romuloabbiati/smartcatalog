@@ -7,11 +7,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.smartgroup.smartcatalog.repositories.CategoryRepository;
 import com.smartgroup.smartcatalog.repositories.ProductRepository;
+import com.smartgroup.smartcatalog.services.exceptions.DatabaseException;
 import com.smartgroup.smartcatalog.services.exceptions.ResourceNotFoundException;
 
 @ExtendWith(SpringExtension.class)
@@ -28,6 +30,7 @@ public class ProductServiceTests {
 	
 	private Long existingId;
 	private Long nonExistingId;
+	private Long dependentId;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -35,10 +38,25 @@ public class ProductServiceTests {
 		
 		nonExistingId = 1000L;
 		
+		dependentId = 4L;
+		
 		Mockito.doNothing().when(productRepository).deleteById(existingId);
 		
 		Mockito.doThrow(EmptyResultDataAccessException.class).when(productRepository).deleteById(nonExistingId);
 		
+		Mockito.doThrow(DataIntegrityViolationException.class).when(productRepository).deleteById(dependentId);
+	}
+	
+	@Test
+	public void deleteShouldThrowDatabaseExceptionWhenDependentId() {
+		// 3. Assert
+		Assertions.assertThrows(DatabaseException.class, () -> {
+			// 1. Arrange
+			
+			// 2. Act
+			productService.delete(dependentId);
+		});
+		Mockito.verify(productRepository, Mockito.times(1)).deleteById(dependentId);
 	}
 	
 	@Test
