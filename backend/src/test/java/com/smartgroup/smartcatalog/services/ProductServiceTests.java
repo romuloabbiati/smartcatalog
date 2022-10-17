@@ -12,10 +12,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.smartgroup.smartcatalog.repositories.CategoryRepository;
 import com.smartgroup.smartcatalog.repositories.ProductRepository;
+import com.smartgroup.smartcatalog.services.exceptions.ResourceNotFoundException;
 
 @ExtendWith(SpringExtension.class)
 public class ProductServiceTests {
-
+	
 	@InjectMocks
 	private ProductService productService;
 	
@@ -26,7 +27,6 @@ public class ProductServiceTests {
 	private CategoryRepository categoryRepository;
 	
 	private Long existingId;
-	
 	private Long nonExistingId;
 	
 	@BeforeEach
@@ -38,6 +38,20 @@ public class ProductServiceTests {
 		Mockito.doNothing().when(productRepository).deleteById(existingId);
 		
 		Mockito.doThrow(EmptyResultDataAccessException.class).when(productRepository).deleteById(nonExistingId);
+		
+	}
+	
+	@Test
+	public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+		// 3. Assert
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			// 1. Arrange
+			
+			// 2. Act
+			productService.delete(nonExistingId);
+		});
+		
+		Mockito.verify(productRepository, Mockito.times(1)).deleteById(nonExistingId);
 	}
 	
 	@Test
@@ -52,5 +66,5 @@ public class ProductServiceTests {
 		
 		Mockito.verify(productRepository, Mockito.times(1)).deleteById(existingId);
 	}
-	
+
 }
