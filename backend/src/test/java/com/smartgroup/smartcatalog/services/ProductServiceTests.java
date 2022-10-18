@@ -13,10 +13,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.smartgroup.smartcatalog.dto.ProductDTO;
 import com.smartgroup.smartcatalog.entities.Product;
 import com.smartgroup.smartcatalog.repositories.CategoryRepository;
 import com.smartgroup.smartcatalog.repositories.ProductRepository;
@@ -54,23 +57,33 @@ public class ProductServiceTests {
 		
 		page = new PageImpl<>(List.of(product));
 		
-		// Page<Product> productsPage = productRepository.findAll(pageable);
+		// Page<ProductDTO> productsDTOPage = productRepository.findAll(pageable);
 		Mockito.when(productRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
 		
 		// entity = productRepository.save(entity);
 		Mockito.when(productRepository.save(ArgumentMatchers.any())).thenReturn(product);
 		
-		// Optional<Product> product = productReporitory.findById(existingId);
+		// Optional<Product> productOptional = productRepository.findById(existingId);
 		Mockito.when(productRepository.findById(existingId)).thenReturn(Optional.of(product));
 		
-		// Optional<Product> product = productRepository.findById(nonExistingId);
+		// Optional<Product> productOptional = productRepository.findById(nonExistingId);
 		Mockito.when(productRepository.findById(nonExistingId)).thenReturn(Optional.empty());
 		
 		Mockito.doNothing().when(productRepository).deleteById(existingId);
-		
 		Mockito.doThrow(EmptyResultDataAccessException.class).when(productRepository).deleteById(nonExistingId);
-		
 		Mockito.doThrow(DataIntegrityViolationException.class).when(productRepository).deleteById(dependentId);
+	}
+	
+	@Test
+	public void findAllPagedShouldReturnPage() {
+		// 1. Arrange
+		Pageable pageable = PageRequest.of(0, 10);
+		// 2. Act
+		Page<ProductDTO> productDTOPage = productService.findAllPaged(pageable);
+		
+		// 3. Assert
+		Assertions.assertNotNull(productDTOPage);
+		Mockito.verify(productRepository, Mockito.times(1)).findAll(pageable);
 	}
 	
 	@Test
