@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.smartgroup.smartcatalog.dto.RoleDTO;
 import com.smartgroup.smartcatalog.dto.UserDTO;
 import com.smartgroup.smartcatalog.dto.UserInsertDTO;
+import com.smartgroup.smartcatalog.dto.UserUpdateDTO;
 import com.smartgroup.smartcatalog.entities.Role;
 import com.smartgroup.smartcatalog.entities.User;
 import com.smartgroup.smartcatalog.repositories.RoleRepository;
@@ -60,11 +61,11 @@ public class UserService {
 	}
 	
 	@Transactional
-	public UserDTO update(Long userId, UserDTO userDTO) {
+	public UserDTO update(Long userId, UserUpdateDTO userUpdateDTO) {
 		try {
 			User user = userRepository.getOne(userId);
 			
-			copyUserDTOToUser(userDTO, user);
+			copyUserDTOToUser(userUpdateDTO, user);
 			
 			user = userRepository.save(user);
 			
