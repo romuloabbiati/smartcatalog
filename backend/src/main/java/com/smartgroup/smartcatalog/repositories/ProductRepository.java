@@ -12,8 +12,8 @@ import com.smartgroup.smartcatalog.entities.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
 
-	@Query("SELECT product FROM Product product INNER JOIN product.categories cats "
-			+ "WHERE :category IN cats")
+	@Query("SELECT DISTINCT product FROM Product product INNER JOIN product.categories cats "
+			+ "WHERE (:category IS NULL OR :category IN cats)")
 	Page<Product> find(Category category, Pageable pageable);
 	
 }
