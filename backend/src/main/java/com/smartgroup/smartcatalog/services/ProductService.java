@@ -1,5 +1,7 @@
 package com.smartgroup.smartcatalog.services;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -32,8 +34,8 @@ public class ProductService {
 	
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(Long categoryId, String name, Pageable pageable) {
-		Category category = (categoryId == 0) ? null : categoryRepository.getOne(categoryId);
-		Page<Product> productsPage = productRepository.find(category, name, pageable);
+		List<Category> categories = (categoryId == 0) ? null : Arrays.asList(categoryRepository.getOne(categoryId));
+		Page<Product> productsPage = productRepository.find(categories, name, pageable);
 		return productsPage.map(product -> new ProductDTO(product, product.getCategories()));
 	}
 	
