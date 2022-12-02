@@ -65,7 +65,7 @@ public class ProductServiceINT {
 		PageRequest pageRequest = PageRequest.of(0, 10);
 		
 		// 2. Act
-		Page<ProductDTO> result = productService.findAllPaged(pageRequest);
+		Page<ProductDTO> result = productService.findAllPaged(0L, "", pageRequest);
 		
 		// 3. Assert
 		Assertions.assertFalse(result.isEmpty());
@@ -81,7 +81,7 @@ public class ProductServiceINT {
 		PageRequest pageRequest = PageRequest.of(50, 10);
 		
 		// 2. Act
-		Page<ProductDTO> result = productService.findAllPaged(pageRequest);
+		Page<ProductDTO> result = productService.findAllPaged(0L, "", pageRequest);
 		
 		// 3. Assert
 		Assertions.assertTrue(result.isEmpty());
@@ -92,7 +92,7 @@ public class ProductServiceINT {
 		// 1. Arrange
 		PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
 		// 2. Act
-		Page<ProductDTO> result = productService.findAllPaged(pageRequest);
+		Page<ProductDTO> result = productService.findAllPaged(0L, "", pageRequest);
 		
 		// 3. Assert
 		Assertions.assertFalse(result.isEmpty());
